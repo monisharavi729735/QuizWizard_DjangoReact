@@ -14,27 +14,43 @@ function LoginSignUpPage() {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-
-        if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-        }
-
         try {
-        const response = await axios.post("http://localhost:8000/users/register/", {
+          const response = await axios.post("http://localhost:8000/users/register/", {
             email: email,
-            password1: password,  // Password1 for dj-rest-auth
-            password2: confirmPassword  // Password2 for confirmation
-        });
-        console.log(response.data); // Handle success, e.g. navigate to login page
-        toggle(true);
-        toast.success('Created account successfully, login with your credentials to continue.')
-
+            password1: password,
+            password2: confirmPassword,
+          });
+          console.log(response.data); // Handle successful registration
+          navigate('/');
+          toast.success('Registration successful!');
         } catch (error) {
-        console.error(error.response.data); // Handle error
-        setError(error.response.data);
+          if (error.response) {
+            const errors = error.response.data;
+            
+            if (errors.password1) {
+              errors.password1.forEach(err => {
+                if (err.includes("This password is too short")) {
+                  toast.error("Password is too short, it must contain at least 8 characters.");
+                }
+                if (err.includes("This password is too common")) {
+                  toast.error("Password is too common, please choose a more secure one.");
+                }
+                if (err.includes("Passwords do not match")) {
+                  toast.error("Passwords do not match.");
+                }
+              });
+            }
+      
+            if (errors.email) {
+              toast.error("Email is already in use. Please choose a different one.");
+            }
+            
+          } else {
+            console.error('Error:', error.message); // Handle other errors (network, etc.)
+            toast.error('An error occurred. Please try again later.');
+          }
         }
-    };
+      };
 
     const handleLogin = async (e) => {
         e.preventDefault();
