@@ -1,8 +1,34 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import wizard from '../assets/images/wizard.png'
+import { useState, useEffect } from 'react';
 
 const Navbar = () => { 
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+      const fetchUserData = async () => {
+          const token = localStorage.getItem('authToken'); // Check for the token
+          if (token) {
+              try {
+                  const response = await axios.get('http://127.0.0.1:8000/api/auth/user/', {
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': `Token ${token}`,
+                      }
+                  });
+                  setUser(response.data);
+              } catch (error) {
+                  setUser(null);
+              }
+          } else {
+              setUser(null); // No token found, set user to null
+          }
+      };
+
+      fetchUserData();
+  }, []);
 
   const linkClass = ({isActive}) => isActive ? 
   "text-white bg-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2" : 
@@ -50,11 +76,17 @@ const Navbar = () => {
                   className={linkClass}
                   >Login</NavLink
                 >
+                <div className={linkClass}>
+                  {user 
+                      ? <p className="text-white bg-cyan-800 rounded-md px-3 py-2 ml-6">{user.email}</p>
+                      : <p className="text-white bg-cyan-800 rounded-md px-3 py-2 ml-6">Guest</p>
+                  }
               </div>
+              </div> 
+            </div>
+            </div>
             </div>
           </div>
-        </div>
-      </div>
     </nav>
     </>
   );

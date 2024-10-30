@@ -4,18 +4,6 @@ import axios from 'axios';
 
 const Hero = ({title='Design quizzes tailored to your needs',
   subtitle='Use QuizWizard to create personalized quizzes in seconds.'}) => {
-  
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('http://localhost:8000/api/greet/')
-      .then(response => {
-        setMessage(response.data.message);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
     
   return (
     <>
@@ -27,8 +15,8 @@ const Hero = ({title='Design quizzes tailored to your needs',
         <h1
             className="text-4xl text-white sm:text-5xl md:text-6xl mb-4"
           >
-            Hey there, {message}
-          </h1>       
+            Hey there,
+          </h1>    
           <h1
             className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl"
           >
