@@ -29,7 +29,7 @@ function LoginSignUpPage() {
       });
       console.log(response.data);
       navigate('/');
-      toast.success('Registration successful!');
+      toast.success('Registration successful! Please log in with your credentials.');
     } catch (error) {
       if (error.response) {
         const errors = error.response.data;
@@ -57,7 +57,10 @@ function LoginSignUpPage() {
       });
       const token = response.data.key;
       localStorage.setItem("authToken", token);
-      window.location.href = '/';
+      navigate('/');
+      setTimeout(function(){
+        window.location.reload();
+    }, 5000);
       toast.success('You have logged in successfully.');
     } catch (error) {
       if (error.response) {

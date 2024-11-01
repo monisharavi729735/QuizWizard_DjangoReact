@@ -31,9 +31,13 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+  
+  if (confirmLogout) {
     localStorage.removeItem('authToken');  // Remove token from localStorage
     setUser(null);  // Clear user state
     navigate('/');  // Redirect to home or login page
+  }
   };
 
   const linkClass = "text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2";
