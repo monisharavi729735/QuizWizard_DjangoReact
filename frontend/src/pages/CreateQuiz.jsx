@@ -5,7 +5,6 @@ const CreateQuiz = () => {
   const [quizData, setQuizData] = useState({
     title: '',
     prompt: '',
-    link:'',
     difficulty: 'easy',
     numQuestions: 1,
   });
@@ -30,7 +29,7 @@ const CreateQuiz = () => {
     <>
       <form onSubmit={handleSubmit} className="px-10 py-10">
         <div className="container-xl lg:container m-auto">
-          <div className="bg-cyan-50 rounded-xl shadow-xl relative py-10 px-20">
+          <div className="bg-cyan-100 rounded-xl shadow-xl relative py-10 px-20">
 
             <h1 className="text-2xl font-extrabold sm:text-4xl md:text-5xl py-10 text-center">
               Design Your Quiz
@@ -66,23 +65,6 @@ const CreateQuiz = () => {
                 required
                 className="w-full p-2 border border-gray-300 rounded h-40"
                 placeholder="Describe the purpose of the quiz or the topics it covers, e.g., This quiz will assess knowledge of basic physics principles."
-              />
-            </div>
-
-            {/*Youtube link*/}
-            <div className="my-4">
-              <label className="block text-lg font-semibold mb-2" htmlFor="prompt">
-              YouTube Link (Optional)
-              </label>
-              <input
-                type='text'
-                id="link"
-                name="link"
-                value={quizData.link}
-                onChange={handleChange}
-                required={false}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Enter a reference YouTube link to generate relevant quiz questions, e.g., https://youtube.com/watch?v=exampleID"
               />
             </div>
 
