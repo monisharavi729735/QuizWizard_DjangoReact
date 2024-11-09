@@ -26,7 +26,42 @@ def create_quiz(request):
             num_questions = data.get('numQuestions', 2)
 
             # Generate quiz content using Gemini API
-            prompt_text = f"Write a quiz about {prompt} with {num_questions} questions. The difficulty level should be {difficulty}. The response needs to be in JSON format."
+            prompt_text = (
+    f"Write a quiz about {prompt} with {num_questions} questions. The difficulty level should be {difficulty}. "
+    "The response should be in JSON format with each question containing the fields: 'question', 'options', "
+    "'answer', and 'explanation'. Here is the JSON structure to follow:\n"
+    "{\n"
+    "    'quiz': {\n"
+    "        'title': 'Topic Title',\n"
+    "        'description': 'Brief description of the topic.',\n"
+    "        'questions': [\n"
+    "            {\n"
+    "                'question': 'Question text here',\n"
+    "                'options': [\n"
+    "                    'Option 1',\n"
+    "                    'Option 2',\n"
+    "                    'Option 3',\n"
+    "                    'Option 4'\n"
+    "                ],\n"
+    "                'answer': 'Correct Option Text',\n"
+    "                'explanation': 'Explanation of why this answer is correct.'\n"
+    "            },\n"
+    "            {\n"
+    "                'question': 'Another question text here',\n"
+    "                'options': [\n"
+    "                    'Option 1',\n"
+    "                    'Option 2',\n"
+    "                    'Option 3',\n"
+    "                    'Option 4'\n"
+    "                ],\n"
+    "                'answer': 'Correct Option Text',\n"
+    "                'explanation': 'Explanation of why this answer is correct.'\n"
+    "            }\n"
+    "        ]\n"
+    "    }\n"
+    "}\n"
+)
+
             response = model.generate_content(prompt_text)
 
             try:
