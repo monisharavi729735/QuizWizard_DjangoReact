@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Link} from 'react-router-dom'
 
 const AnswerQuiz = () => {
   const questions = [
@@ -64,6 +65,17 @@ const AnswerQuiz = () => {
     }
   };
 
+  const getScoreMessage = () => {
+    const scorePercentage = (score / questions.length) * 100;
+    if (scorePercentage === 100) {
+      return "Outstanding! You got a perfect score!";
+    } else if (scorePercentage >= 50) {
+      return "Good job! You scored more than 50%.";
+    } else {
+      return "Keep trying! Practice makes perfect.";
+    }
+  };
+
   const handleTryAgain = () => {
     setScore(0); // Reset score
     setCurrentQuestionIndex(0); // Reset to the first question
@@ -122,17 +134,28 @@ const AnswerQuiz = () => {
         </>
       ) : (
         // Display Score and Try Again button when quiz is completed
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl text-center border border-gray-300">
         <div className="text-center space-y-6">
+        <div className="text-6xl text-yellow-500 font-bold">
+          <i class="fa-solid fa-award"></i>
+        </div>
           <h2 className="text-3xl font-bold">Quiz Completed!</h2>
           <p className="text-xl">
             Your Score: {score} / {questions.length}
           </p>
+          <p className="text-xl font-semibold">{getScoreMessage()}</p>
+          <Link
+            to="/"
+            className="py-3 px-6 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg mr-2"
+            >Go Back Home</Link
+          >
           <button
             onClick={handleTryAgain}
             className="py-3 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg"
           >
             Try Again
           </button>
+        </div>
         </div>
       )}
     </div>
