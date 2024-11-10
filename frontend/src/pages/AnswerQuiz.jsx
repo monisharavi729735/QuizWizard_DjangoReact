@@ -1,6 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const AnswerQuiz = () => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const correctAnswer = "The expansion of the universe";
+
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+  };
+
+  const getOptionClass = (option) => {
+    let baseClass = "w-full py-4 font-bold rounded-lg text-white ";
+    if (selectedOption === null) {
+      return baseClass + "bg-gray-400"; // Initial color for unselected options
+    }
+    if (option === correctAnswer) {
+      return baseClass + "bg-green-400"; // Correct answer color
+    }
+    return baseClass + "bg-red-400"; // Incorrect answer color
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center space-y-6 pb-20">
       {/* Quiz Title */}
@@ -17,33 +35,33 @@ const AnswerQuiz = () => {
 
       {/* Answer Options */}
       <div className="space-y-4 w-full max-w-3xl px-4">
-        <button className="w-full py-4 bg-red-400 text-white font-bold rounded-lg">
-          Gravitational lensing
-        </button>
-        <button className="w-full py-4 bg-red-400 text-white font-bold rounded-lg">
-          Time dilation
-        </button>
-        <button className="w-full py-4 bg-red-400 text-white font-bold rounded-lg">
-          The existence of black holes
-        </button>
-        <button className="w-full py-4 bg-green-400 text-white font-bold rounded-lg">
-          The expansion of the universe
-        </button>
+        {["Gravitational lensing", "Time dilation", "The existence of black holes", "The expansion of the universe"].map((option) => (
+          <button
+            key={option}
+            onClick={() => handleOptionClick(option)}
+            className={`${getOptionClass(option)} ${selectedOption === option ? "border-4 border-black" : ""}`}
+          >
+            {option}
+          </button>
+        ))}
       </div>
 
-      {/* Explanation Section */}
-      <div className="w-full max-w-3xl px-4 mt-6 bg-gray-200 p-4 rounded-lg text-gray-700">
-        <p>
-          <strong>Explanation:</strong> While general relativity provides the framework for understanding the universe's expansion, the expansion itself was proposed by Hubble and is not a direct consequence of Einstein's theory.
-        </p>
-      </div>
+      {/* Explanation Section and Next Button */}
+      {selectedOption && (
+        <>
+          <div className="w-full max-w-3xl px-4 mt-6 bg-gray-200 p-4 rounded-lg text-gray-700">
+            <p>
+              <strong>Explanation:</strong> While general relativity provides the framework for understanding the universe's expansion, the expansion itself was proposed by Hubble and is not a direct consequence of Einstein's theory.
+            </p>
+          </div>
 
-      {/* Next Button */}
-      <div className="text-center mt-4 w-full max-w-3xl">
-        <button className="py-3 px-6 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-lg w-full">
-          Next
-        </button>
-      </div>
+          <div className="text-center mt-4 w-full max-w-3xl">
+            <button className="py-3 px-6 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-lg w-full">
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
