@@ -4,6 +4,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import LoginSignUpPage from './pages/LoginSignUpPage'
 import CreateQuiz from './pages/CreateQuiz'
 import AnswerQuiz from './pages/AnswerQuiz'
+import ErrorPage from './pages/ErrorPage'
 
 import {
   Route,
@@ -18,6 +19,7 @@ function App() {
       <Route path="/" element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path='*' element={<NotFoundPage />} />
+        <Route path='/error' element={<ErrorPage />} />
         <Route path='/auth' element={<LoginSignUpPage />} />
         <Route path="add-quiz" element={<CreateQuiz />} />
         <Route path="/answer-quiz" element={<AnswerQuiz />} />
