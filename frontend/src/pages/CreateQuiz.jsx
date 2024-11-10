@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CreateQuiz = () => {
-
   const [quizData, setQuizData] = useState({
     title: '',
     prompt: '',
     difficulty: 'easy',
     numQuestions: 1,
   });
+
+  const navigate = useNavigate(); // Corrected position inside the component
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,15 +18,15 @@ const CreateQuiz = () => {
       [name]: value,
     });
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form from submitting normally
     
     //api logic
     console.log("Submit Quiz");
+    navigate('/answer-quiz');  // This will navigate to /answer-quiz
   };
-  
+
   return (
     <>
       <form onSubmit={handleSubmit} className="px-10 py-10">
@@ -119,7 +121,7 @@ const CreateQuiz = () => {
         </div>
       </form>
     </>
-  )
-}
+  );
+};
 
 export default CreateQuiz;
