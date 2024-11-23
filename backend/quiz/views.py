@@ -13,7 +13,7 @@ model = genai.GenerativeModel('gemini-1.5-flash',
                               generation_config={"response_mime_type": "application/json"})
 
 
-@login_required(login_url='rest_login')
+#login_required(login_url='rest_login')
 @csrf_exempt
 def create_quiz(request):
     if request.method == 'POST':
@@ -85,9 +85,12 @@ def create_quiz(request):
                 print("Error processing quiz content:", e)
                 return JsonResponse({'error': 'Invalid JSON format in quiz content.'}, status=400)
 
+            user = request.user if request.user.is_authenticated else None
+            print(user)
+            
             # Save quiz data to the database
             quiz = Quiz.objects.create(
-                user=request.user,
+                user=user,
                 title=title,
                 description=prompt,
                 difficulty=difficulty,

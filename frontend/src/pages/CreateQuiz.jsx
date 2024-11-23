@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CreateQuiz = () => {
+  async function sendQuizRequest(data) {
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/quiz/generate-quiz/', data);
+      console.log('Quiz Data:', response.data);
+    } catch (error) {
+      console.error('API Error:', error.response?.data || error.message);
+    }
+  }
+
   const [quizData, setQuizData] = useState({
     title: '',
     prompt: '',
@@ -22,7 +32,7 @@ const CreateQuiz = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form from submitting normally
     
-    //api logic
+    sendQuizRequest(quizData);
     console.log("Submit Quiz");
     navigate('/answer-quiz');  // This will navigate to /answer-quiz
   };
