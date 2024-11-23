@@ -7,10 +7,12 @@ const CreateQuiz = () => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/quiz/generate-quiz/', data);
       console.log('Quiz Data:', response.data);
+      return response.data; // Return the quiz data
     } catch (error) {
       console.error('API Error:', error.response?.data || error.message);
+      return null; // Return null if there's an error
     }
-  }
+  }  
 
   const [quizData, setQuizData] = useState({
     title: '',
@@ -32,10 +34,15 @@ const CreateQuiz = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form from submitting normally
     
-    sendQuizRequest(quizData);
-    console.log("Submit Quiz");
-    navigate('/answer-quiz');  // This will navigate to /answer-quiz
-  };
+    const quizDataResponse = await sendQuizRequest(quizData); // Get the quiz data
+    
+    if (quizDataResponse) {
+      console.log("Submit Quiz");
+      navigate('/answer-quiz', { state: { quizData: quizDataResponse } }); // Pass data using navigate state
+    } else {
+      console.error("Failed to generate quiz.");
+    }
+  };  
 
   return (
     <>

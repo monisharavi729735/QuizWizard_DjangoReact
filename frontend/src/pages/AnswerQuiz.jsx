@@ -1,34 +1,24 @@
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom';
 
 const AnswerQuiz = () => {
-  const questions = [
-    {
-      question: "Which of the following is NOT a consequence of Einstein's theory of general relativity?",
-      options: [
-        "Gravitational lensing",
-        "Time dilation",
-        "The existence of black holes",
-        "The expansion of the universe",
-      ],
-      correctAnswer: "The expansion of the universe",
-      explanation:
-        "While general relativity provides the framework for understanding the universe's expansion, the expansion itself was proposed by Hubble and is not a direct consequence of Einstein's theory.",
-    },
-    {
-      question: "What is the primary force holding atomic nuclei together?",
-      options: [
-        "Electromagnetic force",
-        "Gravitational force",
-        "Strong nuclear force",
-        "Weak nuclear force",
-      ],
-      correctAnswer: "Strong nuclear force",
-      explanation:
-        "The strong nuclear force binds protons and neutrons in the nucleus, counteracting the repulsive electromagnetic force between protons.",
-    },
-    // Add more questions as needed
-  ];
+  const location = useLocation();
+  const { quizData } = location.state || { quizData: { quiz_content: { quiz: { questions: [] } } } }; // Fallback if no data is passed
+
+  console.log("Received Quiz Data:", quizData); // Debugging line
+
+  // Access the questions from the nested structure
+  const questions = quizData?.quiz_content?.quiz?.questions; // Use optional chaining to safely access nested properties
+  console.log("questions: ", questions);
+  // Check if questions exist
+  if (!questions.length) {
+    return (
+      <div className="bg-red-100 text-red-800 p-4 rounded-md">
+        <h2 className="font-bold">Error</h2>
+        <p>No questions found. Please go back and create a quiz.</p>
+      </div>
+    );
+  }
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -39,8 +29,7 @@ const AnswerQuiz = () => {
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
-    // Check if selected answer is correct and update score
-    if (option === currentQuestion.correctAnswer) {
+    if (option === currentQuestion.answer) {
       setScore((prevScore) => prevScore + 1);
     }
   };
@@ -50,7 +39,7 @@ const AnswerQuiz = () => {
     if (selectedOption === null) {
       return baseClass + "bg-gray-400"; // Initial color for unselected options
     }
-    if (option === currentQuestion.correctAnswer) {
+    if (option === currentQuestion.answer) {
       return baseClass + "bg-green-400"; // Correct answer color
     }
     return baseClass + "bg-red-400"; // Incorrect answer color
@@ -89,7 +78,12 @@ const AnswerQuiz = () => {
         <>
           {/* Quiz Title */}
           <div className="font-bold text-3xl py-4 px-8 rounded-lg w-full max-w-3xl text-center">
-            <h1>Physics Quiz</h1>
+            <h1>{quizData?.title || "Quiz Title"}</h1>
+          </div>
+
+          {/* Progress Indicator */}
+          <div className="text-gray-600 text-lg mr-0">
+            Question {currentQuestionIndex + 1} of {questions.length}
           </div>
 
           {/* Question Block */}
@@ -135,27 +129,28 @@ const AnswerQuiz = () => {
       ) : (
         // Display Score and Try Again button when quiz is completed
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl text-center border border-gray-300">
-        <div className="text-center space-y-6">
-        <div className="text-6xl text-yellow-500 font-bold">
-          <i class="fa-solid fa-award"></i>
-        </div>
-          <h2 className="text-3xl font-bold">Quiz Completed!</h2>
-          <p className="text-xl">
-            Your Score: {score} / {questions.length}
-          </p>
-          <p className="text-xl font-semibold">{getScoreMessage()}</p>
-          <Link
-            to="/"
-            className="py-3 px-6 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg mr-2"
-            >Go Back Home</Link
-          >
-          <button
-            onClick={handleTryAgain}
-            className="py-3 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg"
-          >
-            Try Again
-          </button>
-        </div>
+          <div className="text-center space-y-6">
+            <div className="text-6xl text-yellow-500 font-bold">
+              <i className="fa-solid fa-award"></i>
+            </div>
+            <h2 className="text-3xl font-bold">Quiz Completed!</h2>
+            <p className="text-xl">
+              Your Score: {score} / {questions.length}
+            </p>
+            <p className="text-xl font-semibold">{getScoreMessage()}</p>
+            <Link
+              to="/add-quiz"
+              className="py-3 px-6 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg mr-2"
+            >
+              New Quiz
+            </Link>
+            <button
+              onClick={handleTryAgain}
+              className="py-3 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       )}
     </div>
