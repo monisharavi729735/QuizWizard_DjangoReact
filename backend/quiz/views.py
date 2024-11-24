@@ -111,8 +111,23 @@ def create_quiz(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-# Quiz detail function for retrieving quiz details by ID
-def quiz_detail(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     return JsonResponse({"status": "Quiz retrieved successfully", "quiz_id": quiz.id, "quiz_content": quiz.quiz_content})
+
+
+def quiz_list_view(request):
+    quizzes = Quiz.objects.all()  # Fetch all quizzes
+    quiz_data = [
+        {
+            "id": quiz.id,
+            "user": quiz.user.username if quiz.user else None,
+            "title": quiz.title,
+            "description": quiz.description,
+            "difficulty": quiz.difficulty,
+            "num_questions": quiz.num_questions,
+            "quiz_content": quiz.quiz_content,
+            "date_created": quiz.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        for quiz in quizzes
+    ]
+    return JsonResponse(quiz_data, safe=False)
