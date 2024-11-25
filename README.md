@@ -8,11 +8,7 @@ With customizable options, instant feedback, and the ability to save and revisit
 
 ---
 
-## 🚀 Shields.io Badges  
-![GitHub stars](https://img.shields.io/github/stars/your-repo/QuizWizard?style=social)  
-![GitHub forks](https://img.shields.io/github/forks/your-repo/QuizWizard?style=social)  
-![GitHub issues](https://img.shields.io/github/issues/your-repo/QuizWizard)  
-![GitHub license](https://img.shields.io/github/license/your-repo/QuizWizard)  
+## 🚀 Shields.io Badges   
 ![Django](https://img.shields.io/badge/Django-4.0-green?logo=django&logoColor=white)  
 ![ReactJS](https://img.shields.io/badge/React-17-blue?logo=react&logoColor=white)  
 ![Python](https://img.shields.io/badge/Python-3.9-blue?logo=python&logoColor=white)  
@@ -23,7 +19,7 @@ With customizable options, instant feedback, and the ability to save and revisit
 ---
 
 ## 🎥 Project Demo  Video
-[![Check out the demo video here!](https://imgur.com/gallery/quizwizard-Ez4VR5Y)](https://youtu.be/2i7sxpLE7hI?si=IeH53KcPTiVhBVcM)
+[![Check out the demo video here!](https://i.imgur.com/eXpMfFz.png)](https://youtu.be/2i7sxpLE7hI?si=IeH53KcPTiVhBVcM)
 <br>
 Demo link coming soon!  
 
