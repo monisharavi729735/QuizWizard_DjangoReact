@@ -19,7 +19,7 @@ With customizable options, instant feedback, and the ability to save and revisit
 ---
 
 ## 🎥 Project Demo  Video
-[![Check out the demo video here!](https://i.imgur.com/eXpMfFz.png)](https://youtu.be/2i7sxpLE7hI?si=IeH53KcPTiVhBVcM)
+[![Check out the demo video here!](https://i.imgur.com/gorzP5E.jpeg)](https://youtu.be/2i7sxpLE7hI?si=IeH53KcPTiVhBVcM)
 <br>
 Demo link coming soon!  
 
