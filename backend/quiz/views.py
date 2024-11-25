@@ -141,3 +141,22 @@ def quiz_list_view(request):
         for quiz in quizzes
     ]
     return JsonResponse(quiz_data, safe=False)
+
+def quiz_detail_view(request, quiz_id):
+    # Fetch the specific quiz by ID
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    
+    # Prepare the quiz data in a dictionary format
+    quiz_data = {
+        "id": quiz.id,
+        "user": quiz.user.username if quiz.user else None,
+        "title": quiz.title,
+        "description": quiz.description,
+        "difficulty": quiz.difficulty,
+        "num_questions": quiz.num_questions,
+        "quiz_content": quiz.quiz_content,
+        "date_created": quiz.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+        "creator_id": quiz.creator_id,
+    }
+    
+    return JsonResponse(quiz_data)

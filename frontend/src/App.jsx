@@ -5,7 +5,9 @@ import LoginSignUpPage from './pages/LoginSignUpPage'
 import AllQuizzes from './pages/AllQuizzes'
 import CreateQuiz from './pages/CreateQuiz'
 import AnswerQuiz from './pages/AnswerQuiz'
+import StartQuiz from './pages/StartQuiz'
 import ErrorPage from './pages/ErrorPage'
+import PrivateRoute from './components/PrivateRoute'; 
 
 import {
   Route,
@@ -25,6 +27,15 @@ function App() {
         <Route path='/quizzes' element={<AllQuizzes />} />
         <Route path="add-quiz" element={<CreateQuiz />} />
         <Route path="/answer-quiz" element={<AnswerQuiz />} />
+        {/* Protect the /start-quiz/:id route with PrivateRoute */}
+        <Route
+          path="/start-quiz/:id"
+          element={
+            <PrivateRoute>
+              <StartQuiz />
+            </PrivateRoute>
+          }
+        />
       </Route>
     )
   );

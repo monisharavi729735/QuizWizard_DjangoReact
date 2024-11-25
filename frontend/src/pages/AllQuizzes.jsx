@@ -12,6 +12,7 @@ const AllQuizzes = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [showMyQuizzes, setShowMyQuizzes] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Added state to track login status
   const [visibleQuizzes, setVisibleQuizzes] = useState(9); // Number of quizzes to display
   const navigate = useNavigate();
 
@@ -36,6 +37,12 @@ const AllQuizzes = () => {
       try {
         const token = localStorage.getItem('authToken');
 
+        if (!token) {
+          setIsLoggedIn(false);  // User is not logged in
+          setUserLoading(false);
+          return;
+        }
+
         const response = await axios.get('http://127.0.0.1:8000/api/auth/user/', {
           withCredentials: true,
           headers: {
@@ -44,8 +51,10 @@ const AllQuizzes = () => {
         });
 
         setUserId(response.data.pk);
+        setIsLoggedIn(true);  // User is logged in
       } catch (error) {
         console.error('Failed to fetch user data:', error.response?.data || error.message);
+        setIsLoggedIn(false);  // In case of error, assume user is not logged in
       } finally {
         setUserLoading(false);
       }
@@ -96,6 +105,16 @@ const AllQuizzes = () => {
     return (
       <div className="flex justify-center items-center h-screen">
         <h1 className="text-2xl font-bold text-center">Loading...</h1>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1 className="text-2xl font-bold text-center">
+          Please <a href="/login" className="text-blue-600">login</a> or <a href="/signup" className="text-blue-600">signup</a> to view all quizzes.
+        </h1>
       </div>
     );
   }
@@ -155,19 +174,28 @@ const AllQuizzes = () => {
           Hard
         </button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredQuizzes.slice(0, visibleQuizzes).map((quiz) => (
-          <QuizList
-            key={quiz.id}
-            title={quiz.quiz_content.quiz.title}
-            description={quiz.quiz_content.quiz.description}
-            difficulty={quiz.difficulty}
-            numQuestions={quiz.num_questions}
-            created={quiz.date_created}
-            link={`/quiz/${quiz.id}`}
-          />
-        ))}
-      </div>
+      
+      {/* Conditional message if no quizzes are available */}
+      {filteredQuizzes.length === 0 ? (
+        <div className="text-center mt-10 text-lg text-gray-600">
+          No quizzes available yet
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredQuizzes.slice(0, visibleQuizzes).map((quiz) => (
+            <QuizList
+              key={quiz.id}
+              title={quiz.quiz_content.quiz.title}
+              description={quiz.quiz_content.quiz.description}
+              difficulty={quiz.difficulty}
+              numQuestions={quiz.num_questions}
+              created={quiz.date_created}
+              link={`/start-quiz/${quiz.id}`}
+            />
+          ))}
+        </div>
+      )}
+
       {visibleQuizzes < filteredQuizzes.length && (
         <div className="text-center mt-8">
           <button
