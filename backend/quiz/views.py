@@ -26,6 +26,16 @@ def create_quiz(request):
             prompt = data.get('prompt', 'Default Description')
             difficulty = data.get('difficulty', 'Easy')
             num_questions = data.get('numQuestions', 2)
+            user_id = data.get('userId')
+            
+            # Debugging: Print user info
+            print("Authenticated User:", request.user)
+            print("User ID:", request.user.id)
+            print("Is Authenticated:", request.user.is_authenticated)
+
+            # If not authenticated, print a warning
+            if not request.user.is_authenticated:
+                print("User is not authenticated")
 
             # Generate quiz content using Gemini API
             prompt_text = f"Write a quiz about {prompt} with {num_questions} questions. The difficulty level should be {difficulty}. The response needs to be in JSON format."
@@ -95,7 +105,8 @@ def create_quiz(request):
                 description=prompt,
                 difficulty=difficulty,
                 num_questions=num_questions,
-                quiz_content=parsed_content
+                quiz_content=parsed_content,
+                creator_id=user_id,
             )
 
             return JsonResponse({
@@ -104,6 +115,7 @@ def create_quiz(request):
                 'title': title,
                 'difficulty': difficulty,
                 'num_questions': num_questions,
+                'user_id': quiz.creator_id
             })
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON in request body.'}, status=400)
@@ -111,9 +123,6 @@ def create_quiz(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
-    quiz = get_object_or_404(Quiz, pk=pk)
-    return JsonResponse({"status": "Quiz retrieved successfully", "quiz_id": quiz.id, "quiz_content": quiz.quiz_content})
-
 
 def quiz_list_view(request):
     quizzes = Quiz.objects.all()  # Fetch all quizzes
@@ -127,6 +136,7 @@ def quiz_list_view(request):
             "num_questions": quiz.num_questions,
             "quiz_content": quiz.quiz_content,
             "date_created": quiz.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+            "creator_id": quiz.creator_id,
         }
         for quiz in quizzes
     ]

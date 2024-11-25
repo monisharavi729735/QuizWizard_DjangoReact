@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Spinner from '../components/Spinners'; // Assuming you have a Spinner component
+import Spinner from '../components/Spinners';
 
 const CreateQuiz = () => {
   const [quizData, setQuizData] = useState({
@@ -9,28 +9,81 @@ const CreateQuiz = () => {
     prompt: '',
     difficulty: 'easy',
     numQuestions: 1,
+    userId: null,
   });
 
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(true);  // Add a loading state for user data
   const navigate = useNavigate();
 
-  // Function to send quiz data to the API
-  async function sendQuizRequest(data) {
-    setLoading(true); // Start loading spinner
+  const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        console.log("Auth Token:", token);
+
+        const response = await axios.get('http://127.0.0.1:8000/api/auth/user/', {
+          withCredentials: true,
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
+
+        console.log('Fetched User Data:', response.data);
+        setQuizData((prevState) => ({
+          ...prevState,
+          userId: response.data.pk,  // Set the userId after data is fetched
+        }));
+      } catch (error) {
+        console.error('Failed to fetch user data:', error.response?.data || error.message);
+      } finally {
+        setUserLoading(false);  // Set userLoading to false after data is fetched
+      }
+    };
+
+    fetchUserData();
+  }, []);  // Only run on mount
+
+  const sendQuizRequest = async (data) => {
+    setLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/quiz/generate-quiz/', data);
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/quiz/generate-quiz/',
+        data,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+        }
+      );
       console.log('Quiz Data:', response.data);
-      return response.data; // Return quiz data
+      return response.data;
     } catch (error) {
       console.error('API Error:', error.response?.data || error.message);
-      return null; // Return null in case of error
+      return null;
     } finally {
-      setLoading(false); // Stop loading spinner
+      setLoading(false);
     }
-  }
+  };
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setQuizData({
@@ -39,33 +92,48 @@ const CreateQuiz = () => {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const quizDataResponse = await sendQuizRequest(quizData); // Get the quiz data
-    
+  
+    if (!quizData.userId) {
+      console.error('User ID is missing. Cannot create quiz.');
+      return;
+    }
+  
+    // Log the quiz data before submitting
+    console.log('Updated Quiz Data:', quizData);
+  
+    const quizDataResponse = await sendQuizRequest(quizData);
     if (quizDataResponse) {
-      console.log("Submit Quiz");
-      navigate('/answer-quiz', { state: { quizData: quizDataResponse } }); // Pass data using navigate state
+      navigate('/answer-quiz', { state: { quizData: quizDataResponse } });
     } else {
-      console.error("Failed to generate quiz.");
+      console.error('Failed to generate quiz.');
     }
   };
+  
+
+  // Return early if the user data is still loading
+  if (userLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner loading={true} />
+      </div>
+    );
+  }
 
   return (
     <>
       {loading ? (
         <div className="flex justify-center items-center h-screen">
-        <div className="text-center">
-          <h1 className="text-3xl font-extrabold sm:text-4xl md:text-5xl mb-5 animate-pulse">
-            Crafting your quiz...
-          </h1>
-          <div className="flex justify-center items-center">
-            <Spinner loading={loading} />
+          <div className="text-center">
+            <h1 className="text-3xl font-extrabold sm:text-4xl md:text-5xl mb-5 animate-pulse">
+              Crafting your quiz...
+            </h1>
+            <div className="flex justify-center items-center">
+              <Spinner loading={loading} />
+            </div>
           </div>
         </div>
-      </div>
       ) : (
         <form onSubmit={handleSubmit} className="px-10 py-10">
           <div className="container-xl lg:container m-auto">
@@ -76,11 +144,11 @@ const CreateQuiz = () => {
 
               {/* Quiz Title */}
               <div className="my-4">
-                <label className="block text-lg font-semibold mb-2" htmlFor="prompt">
+                <label className="block text-lg font-semibold mb-2" htmlFor="title">
                   Quiz Title
                 </label>
                 <input
-                  type='text'
+                  type="text"
                   id="title"
                   name="title"
                   value={quizData.title}
@@ -91,7 +159,7 @@ const CreateQuiz = () => {
                 />
               </div>
 
-              {/* Quiz Prompt */}
+              {/* Quiz Description */}
               <div className="my-4">
                 <label className="block text-lg font-semibold mb-2" htmlFor="prompt">
                   Quiz Description
@@ -147,7 +215,7 @@ const CreateQuiz = () => {
                 </div>
               </div>
 
-              <div className='my-10 text-center'>
+              <div className="my-10 text-center">
                 <button
                   type="submit"
                   className="text-lg bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg"

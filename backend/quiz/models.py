@@ -15,6 +15,7 @@ class Quiz(models.Model):
     difficulty = models.CharField(
         max_length=10, choices=DIFFICULTY_CHOICES, default='easy'
     )
+    creator_id = models.IntegerField(null=True)
     num_questions = models.PositiveIntegerField(default=1)
     quiz_content = models.JSONField(null=True, blank=True, help_text="Store generated quiz content as JSON")
     date_created = models.DateTimeField(auto_now_add=True)
