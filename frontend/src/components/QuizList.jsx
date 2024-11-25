@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const QuizList = ({ title, description, difficulty, numQuestions, link }) => {
+const QuizList = ({ title, description, difficulty, numQuestions, created, link }) => {
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105">
       {/* Header */}
@@ -21,6 +21,9 @@ const QuizList = ({ title, description, difficulty, numQuestions, link }) => {
         </p>
         <p className="mb-3 font-medium text-sm text-gray-500">
           <span className="font-bold">Questions:</span> {numQuestions}
+        </p>
+        <p className="mb-3 font-medium text-sm text-gray-500">
+          <span className="font-bold">Created on:</span> {new Date(created).toLocaleDateString()}
         </p>
       </div>
 

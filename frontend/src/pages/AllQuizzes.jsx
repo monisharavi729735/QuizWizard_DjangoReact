@@ -149,10 +149,11 @@ const AllQuizzes = () => {
         {filteredQuizzes.map((quiz) => (
           <QuizList
             key={quiz.id}
-            title={quiz.title}
-            description={quiz.description}
+            title={quiz.quiz_content.quiz.title}
+            description={quiz.quiz_content.quiz.description}
             difficulty={quiz.difficulty}
             numQuestions={quiz.num_questions}
+            created={quiz.date_created}
             link={`/quiz/${quiz.id}`}
           />
         ))}
