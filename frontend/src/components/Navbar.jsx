@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import wizard from '../assets/images/wizard.png';
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -12,7 +13,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (token) {
         try {
-          const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user/`, {
+          const response = await axios.get(`${apiBaseUrl}/api/auth/user/`, {
             headers: {
               'Authorization': `Token ${token}`,
             },

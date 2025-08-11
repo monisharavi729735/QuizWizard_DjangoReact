@@ -3,6 +3,7 @@ import * as Components from './Components.js';
 import axios from "axios";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 function LoginSignUpPage() {
   const [signIn, toggle] = useState(true);
@@ -22,12 +23,12 @@ function LoginSignUpPage() {
     }
     
     try {
-      const response = await axios.post(`${import.meta.env.REACT_APP_API_BASE_URL}/api/auth/register/`, {
+      const response = await axios.post(`${apiBaseUrl}/api/auth/register/`, {
         email,
         password1: password,
         password2: confirmPassword,
       });
-      console.log("API URL:", process.env.REACT_APP_API_BASE_URL);
+      console.log("API URL:", apiBaseUrl);
       console.log(response.data);
       navigate('/');
       toast.success('Registration successful! Please log in with your credentials.');
@@ -52,11 +53,11 @@ function LoginSignUpPage() {
     setError(null);
 
     try {
-      const response = await axios.post(`${import.meta.env.REACT_APP_API_BASE_URL}/api/auth/login/`, {
+      const response = await axios.post(`${apiBaseUrl}/api/auth/login/`, {
         email,
         password
       });
-      console.log("API URL:", process.env.REACT_APP_API_BASE_URL);
+      console.log("API URL:", apiBaseUrl);
       const token = response.data.key;
       localStorage.setItem("authToken", token);
       navigate('/');

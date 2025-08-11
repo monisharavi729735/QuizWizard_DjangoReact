@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
 
 const PrivateRoute = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -12,7 +14,7 @@ const PrivateRoute = ({ children }) => {
         const token = localStorage.getItem('authToken');
         if (token) {
           // Make a request to check if the token is valid
-          await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user/`, {
+          await axios.get(`${apiBaseUrl}/api/auth/user/`, {
             headers: {
               Authorization: `Token ${token}`,
             },

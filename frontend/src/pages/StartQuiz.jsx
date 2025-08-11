@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const StartQuiz = () => {
   const { id } = useParams();  // Extract quiz ID from the URL
@@ -15,7 +16,7 @@ const StartQuiz = () => {
     // Fetch quiz data based on the quizId
     const fetchQuizData = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/quiz-detail/${id}/`);  // Fetch specific quiz by ID
+        const response = await fetch(`${apiBaseUrl}/api/quiz/quiz-detail/${id}/`);  // Fetch specific quiz by ID
         if (!response.ok) {
           throw new Error('Failed to fetch quiz data');
         }

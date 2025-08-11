@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from '../components/Spinners';
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const CreateQuiz = () => {
   const [quizData, setQuizData] = useState({
@@ -37,7 +38,7 @@ const CreateQuiz = () => {
         const token = localStorage.getItem('authToken');
         console.log("Auth Token:", token);
 
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user/`, {
+        const response = await axios.get(`${apiBaseUrl}/api/auth/user/`, {
           withCredentials: true,
           headers: {
             Authorization: `Token ${token}`,
@@ -64,7 +65,7 @@ const CreateQuiz = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/generate-quiz/`,
+        `${apiBaseUrl}/api/quiz/generate-quiz/`,
         data,
         {
           withCredentials: true,
