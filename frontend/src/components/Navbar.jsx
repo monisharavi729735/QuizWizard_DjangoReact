@@ -12,7 +12,7 @@ const Navbar = () => {
       const token = localStorage.getItem('authToken');
       if (token) {
         try {
-          const response = await axios.get('http://127.0.0.1:8000/api/auth/user/', {
+          const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user/`, {
             headers: {
               'Authorization': `Token ${token}`,
             },

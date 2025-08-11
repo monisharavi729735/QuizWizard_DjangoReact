@@ -12,7 +12,7 @@ const PrivateRoute = ({ children }) => {
         const token = localStorage.getItem('authToken');
         if (token) {
           // Make a request to check if the token is valid
-          await axios.get('http://127.0.0.1:8000/api/auth/user/', {
+          await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user/`, {
             headers: {
               Authorization: `Token ${token}`,
             },

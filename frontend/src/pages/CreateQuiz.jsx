@@ -37,7 +37,7 @@ const CreateQuiz = () => {
         const token = localStorage.getItem('authToken');
         console.log("Auth Token:", token);
 
-        const response = await axios.get('http://127.0.0.1:8000/api/auth/user/', {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user/`, {
           withCredentials: true,
           headers: {
             Authorization: `Token ${token}`,
@@ -64,7 +64,7 @@ const CreateQuiz = () => {
 
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/quiz/generate-quiz/',
+        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/generate-quiz/`,
         data,
         {
           withCredentials: true,

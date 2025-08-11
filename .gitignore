@@ -36,4 +36,5 @@ Thumbs.db
 # Environment variables
 .env
 backend/.env
+frontend/.env
 backend/env/

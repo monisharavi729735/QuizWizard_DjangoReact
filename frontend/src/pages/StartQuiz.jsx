@@ -15,7 +15,7 @@ const StartQuiz = () => {
     // Fetch quiz data based on the quizId
     const fetchQuizData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/quiz/quiz-detail/${id}/`);  // Fetch specific quiz by ID
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/quiz-detail/${id}/`);  // Fetch specific quiz by ID
         if (!response.ok) {
           throw new Error('Failed to fetch quiz data');
         }

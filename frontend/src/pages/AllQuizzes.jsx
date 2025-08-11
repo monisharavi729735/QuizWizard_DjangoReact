@@ -19,7 +19,7 @@ const AllQuizzes = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/quiz/quiz-list/');
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/quiz-list/`);
         setQuizzes(response.data);
         setFilteredQuizzes(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const AllQuizzes = () => {
           return;
         }
 
-        const response = await axios.get('http://127.0.0.1:8000/api/auth/user/', {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user/`, {
           withCredentials: true,
           headers: {
             Authorization: `Token ${token}`,
@@ -102,7 +102,7 @@ const AllQuizzes = () => {
 
     try {
       const token = localStorage.getItem('authToken');
-      await axios.delete(`http://127.0.0.1:8000/api/quiz/quiz-detail/${quizId}/`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/quiz-detail/${quizId}/`, {
         headers: { Authorization: `Token ${token}` }
       });
 
@@ -211,8 +211,8 @@ const AllQuizzes = () => {
               numQuestions={quiz.num_questions}
               created={quiz.date_created}
               link={`/start-quiz/${quiz.id}`}
-              isOwner={quiz.creator_id === userId}  // ✅ Check ownership
-              onDelete={() => handleDeleteQuiz(quiz.id)} // ✅ Pass delete handler
+              isOwner={quiz.creator_id === userId}  
+              onDelete={() => handleDeleteQuiz(quiz.id)}
             />
           ))}
         </div>
