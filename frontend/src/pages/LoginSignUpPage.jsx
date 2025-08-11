@@ -22,11 +22,12 @@ function LoginSignUpPage() {
     }
     
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/register/`, {
+      const response = await axios.post(`${import.meta.env.REACT_APP_API_BASE_URL}/api/auth/register/`, {
         email,
         password1: password,
         password2: confirmPassword,
       });
+      console.log("API URL:", process.env.REACT_APP_API_BASE_URL);
       console.log(response.data);
       navigate('/');
       toast.success('Registration successful! Please log in with your credentials.');
@@ -51,10 +52,11 @@ function LoginSignUpPage() {
     setError(null);
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/login/`, {
+      const response = await axios.post(`${import.meta.env.REACT_APP_API_BASE_URL}/api/auth/login/`, {
         email,
         password
       });
+      console.log("API URL:", process.env.REACT_APP_API_BASE_URL);
       const token = response.data.key;
       localStorage.setItem("authToken", token);
       navigate('/');
