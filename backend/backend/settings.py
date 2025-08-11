@@ -61,8 +61,15 @@ LOGIN_URL = '/api/auth/login/'
 
 # CORS configuration for frontend (React)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Frontend URL
+    "http://localhost:3000",  # Frontend URL (dev)
+    "https://quiz-wizard-wine.vercel.app",
 ]
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.vercel\.app$", # frontend url for prod
+]
+
+
 CORS_ALLOW_CREDENTIALS = True  # Important for sending cookies with requests
 
 # Middleware configuration
