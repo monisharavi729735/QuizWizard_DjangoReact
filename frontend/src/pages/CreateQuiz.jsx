@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from '../components/Spinners';
+
 const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const CreateQuiz = () => {
@@ -14,7 +15,9 @@ const CreateQuiz = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [userLoading, setUserLoading] = useState(true);  // Add a loading state for user data
+  const [userLoading, setUserLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate();
 
   const getCookie = (name) => {
@@ -32,11 +35,16 @@ const CreateQuiz = () => {
     return cookieValue;
   };
 
+  // Fetch user info on mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('authToken');
-        console.log("Auth Token:", token);
+
+        if (!token) {
+          setIsLoggedIn(false);
+          return;
+        }
 
         const response = await axios.get(`${apiBaseUrl}/api/auth/user/`, {
           withCredentials: true,
@@ -45,20 +53,21 @@ const CreateQuiz = () => {
           },
         });
 
-        console.log('Fetched User Data:', response.data);
-        setQuizData((prevState) => ({
-          ...prevState,
-          userId: response.data.pk,  // Set the userId after data is fetched
+        setQuizData((prev) => ({
+          ...prev,
+          userId: response.data.pk,
         }));
+        setIsLoggedIn(true);
       } catch (error) {
         console.error('Failed to fetch user data:', error.response?.data || error.message);
+        setIsLoggedIn(false);
       } finally {
-        setUserLoading(false);  // Set userLoading to false after data is fetched
+        setUserLoading(false);
       }
     };
 
     fetchUserData();
-  }, []);  // Only run on mount
+  }, []);
 
   const sendQuizRequest = async (data) => {
     setLoading(true);
@@ -75,7 +84,6 @@ const CreateQuiz = () => {
           },
         }
       );
-      console.log('Quiz Data:', response.data);
       return response.data;
     } catch (error) {
       console.error('API Error:', error.response?.data || error.message);
@@ -87,33 +95,27 @@ const CreateQuiz = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setQuizData({
-      ...quizData,
+    setQuizData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!quizData.userId) {
       console.error('User ID is missing. Cannot create quiz.');
       return;
     }
-  
-    // Log the quiz data before submitting
-    console.log('Updated Quiz Data:', quizData);
-  
+
     const quizDataResponse = await sendQuizRequest(quizData);
     if (quizDataResponse) {
       navigate('/answer-quiz', { state: { quizData: quizDataResponse } });
-    } else {
-      console.error('Failed to generate quiz.');
     }
   };
-  
 
-  // Return early if the user data is still loading
+  // Loading state for user data
   if (userLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -122,6 +124,7 @@ const CreateQuiz = () => {
     );
   }
 
+  // Not logged in message
   if (!isLoggedIn) {
     return (
       <div className="flex justify-center items-center h-screen">
