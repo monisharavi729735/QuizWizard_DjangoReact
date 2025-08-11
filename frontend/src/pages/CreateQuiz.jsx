@@ -122,6 +122,16 @@ const CreateQuiz = () => {
     );
   }
 
+  if (!isLoggedIn) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1 className="text-2xl font-bold text-center">
+          Please <a href="/login" className="text-blue-600">login</a> or <a href="/signup" className="text-blue-600">signup</a> to create a quiz.
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <>
       {loading ? (
