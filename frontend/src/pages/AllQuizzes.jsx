@@ -97,6 +97,26 @@ const AllQuizzes = () => {
     setVisibleQuizzes(9);
   };
 
+  const handleDeleteQuiz = async (quizId) => {
+    if (!window.confirm("Are you sure you want to delete this quiz?")) return;
+
+    try {
+      const token = localStorage.getItem('authToken');
+      await axios.delete(`http://127.0.0.1:8000/api/quiz/quiz-detail/${quizId}/`, {
+        headers: { Authorization: `Token ${token}` }
+      });
+
+
+      // Remove deleted quiz from state
+      setQuizzes((prev) => prev.filter((quiz) => quiz.id !== quizId));
+      setFilteredQuizzes((prev) => prev.filter((quiz) => quiz.id !== quizId));
+      setMyQuizzes((prev) => prev.filter((quiz) => quiz.id !== quizId));
+
+    } catch (error) {
+      console.error("Error deleting quiz:", error.response?.data || error.message);
+    }
+  };
+
   const handleLoadMore = () => {
     setVisibleQuizzes((prev) => prev + 9);
   };
@@ -191,6 +211,8 @@ const AllQuizzes = () => {
               numQuestions={quiz.num_questions}
               created={quiz.date_created}
               link={`/start-quiz/${quiz.id}`}
+              isOwner={quiz.creator_id === userId}  // ✅ Check ownership
+              onDelete={() => handleDeleteQuiz(quiz.id)} // ✅ Pass delete handler
             />
           ))}
         </div>

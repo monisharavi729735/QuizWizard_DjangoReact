@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from .models import Quiz
@@ -142,11 +143,16 @@ def quiz_list_view(request):
     ]
     return JsonResponse(quiz_data, safe=False)
 
+@csrf_exempt
+@require_http_methods(["GET", "DELETE"])
 def quiz_detail_view(request, quiz_id):
-    # Fetch the specific quiz by ID
     quiz = get_object_or_404(Quiz, id=quiz_id)
-    
-    # Prepare the quiz data in a dictionary format
+
+    if request.method == "DELETE":
+        quiz.delete()
+        return JsonResponse({'message': 'Quiz deleted successfully'}, status=204)
+
+    # Handle GET request
     quiz_data = {
         "id": quiz.id,
         "user": quiz.user.username if quiz.user else None,
