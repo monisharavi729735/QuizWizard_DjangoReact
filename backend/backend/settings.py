@@ -1,16 +1,16 @@
 from decouple import config
 from pathlib import Path
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(zi*=kro^qhy79e89^)neq)j9g^bxqfzg0xcq0doy#3&06%mo6'
+SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = True
+DEBUG = config('DEBUG', 'False').lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(" ")
 
 # Application definition
 
@@ -101,6 +101,8 @@ DATABASES = {
         'PORT': config('DB_PORT', default='5432'),
     }
 }
+
+DATABASES["default"] = dj_database_url.parse(config('PROD_DB_URL'))
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
