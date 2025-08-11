@@ -18,10 +18,14 @@ With customizable options, instant feedback, and the ability to save and revisit
 
 ---
 
-## 🎥 Project Demo  Video
-[![Check out the demo video here!](https://i.imgur.com/gorzP5E.jpeg)](https://youtu.be/2i7sxpLE7hI?si=IeH53KcPTiVhBVcM)
-<br>
-Demo link coming soon!  
+## 🎥 Project Demo Video
+
+[![Watch the demo video](https://img.youtube.com/vi/2i7sxpLE7hI/hqdefault.jpg)](https://youtu.be/2i7sxpLE7hI?si=IeH53KcPTiVhBVcM)
+
+## Project Demo Link
+
+[https://quiz-wizard-wine.vercel.app/](https://quiz-wizard-wine.vercel.app/)
+ 
 
 ---
 
